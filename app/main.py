@@ -7,10 +7,13 @@ from files.application.file_commands import GetFileCommand, SaveFileCommand
 from messages.infrastructure.rabbitmq_messages_service import (
     RabbitMQMessagingService,
 )
+from remove_bg.infrastructure.rembg_remove_bg_service import RembgRemoveBGService
+from remove_bg.application.remove_bg_commands import RemoveBGCommand
 
 
 def main():
     config = Config()
+
     file_repository = MongoFileRepository(config.db_uri, config.db_name)
     messages_service = RabbitMQMessagingService(
         host=config.rabbitmq_host,
@@ -19,17 +22,22 @@ def main():
         port=config.rabbitmq_port,
         source=config.source,
     )
+    remove_bg_service = RembgRemoveBGService()
+
+    get_file = GetFileCommand(file_repository).execute
+    save_file = SaveFileCommand(file_repository).execute
+    remove_bg = RemoveBGCommand(remove_bg_service).execute
 
     def process_message(message, properties):
         try:
             asset_id = message.get("asset_id")
-            file = GetFileCommand(file_repository).execute(asset_id)
+            file = get_file(asset_id)
 
             if not file:
                 raise Exception(f"File with id: '{asset_id}' was not found")
 
-            new_asset_id = SaveFileCommand(file_repository).execute(
-                filename=file.filename, content=file.content
+            new_asset_id = save_file(
+                filename=file.filename, content=remove_bg(content=file.content)
             )
 
             messages_service.publish(

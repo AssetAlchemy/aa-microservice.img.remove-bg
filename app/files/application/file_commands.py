@@ -8,7 +8,7 @@ class SaveFileCommand:
     def __init__(self, file_repository: FileRepository):
         self.file_repository = file_repository
 
-    def execute(self, filename: str, content: str) -> str:
+    def execute(self, filename: str, content: bytes) -> str:
         try:
             file = File(filename=filename, content=content)
             saved_file = self.file_repository.add(file)
