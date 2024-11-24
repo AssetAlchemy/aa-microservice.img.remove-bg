@@ -2,7 +2,7 @@ asyncapi: 3.0.0
 defaultContentType: application/json
 
 info:
-  title: Microservice template for Python
+  title: Remove background microservice
   version: 1.0.0
   description: >
     This microservice obtains the identifier of an asset that is in a storage, with this ID the microservice is in charge of retrieving the asset to make its processes and if it is necessary to upload a new asset with a new ID to be able to emit an event that there has been an update in the asset.
@@ -27,19 +27,19 @@ servers:
     protocol: amqp
     protocolVersion: 0-9-1
 channels: 
-  assets.template:
-    address: assets.template.1
+  assets.img.remove-bg.1:
+    address: assets.img.remove-bg.1
     summary: >-
-      Template queue to recieve assets as microservice.
+      Queue to receive assets as microservice.
     messages:
-      recieve_asset:
+      receive_asset:
         $ref: '#/components/messages/template_message'
-      recieve_error:
+      receive_error:
         $ref: '#/components/messages/error_template_message'
     bindings:
       amqp:
         queue:
-          vhost: assets.template.1
+          vhost: assets.img.remove-bg.1
         is: queue
   assets.processed:
     address: assets.processed.1
@@ -56,18 +56,18 @@ channels:
           vhost: assets.processed.1
         is: queue
 operations:
-  recieve_asset:
+  receive_asset:
     action: receive
     channel:
-      $ref: '#/channels/assets.template'
+      $ref: '#/channels/assets.img.remove-bg.1'
     messages:
-      - $ref: '#/channels/assets.template/messages/recieve_asset'
-  recieve_error:
+      - $ref: '#/channels/assets.img.remove-bg.1/messages/receive_asset'
+  receive_error:
     action: receive
     channel:
-      $ref: '#/channels/assets.template'
+      $ref: '#/channels/assets.img.remove-bg.1'
     messages:
-      - $ref: '#/channels/assets.template/messages/recieve_error'
+      - $ref: '#/channels/assets.img.remove-bg.1/messages/receive_error'
   send_asset:
     action: send
     channel:
@@ -101,9 +101,9 @@ components:
             type: string
             description: Application source.
             enum:
-              - aa-microservice.template-python
+              - aa-microservice.img.remove-bg
             examples:
-              - aa-microservice.template-python
+              - aa-microservice.img.remove-bg
           content_type:
             type: string
             description: Content type, in this case is always `application/json`.
@@ -128,9 +128,9 @@ components:
             type: string
             description: Application source.
             enum:
-              - aa-microservice.template-python
+              - aa-microservice.img.remove-bg
             examples:
-              - aa-microservice.template-python
+              - aa-microservice.img.remove-bg
           content_type:
             type: string
             description: Content type, in this case is always `application/json`.
@@ -156,10 +156,10 @@ components:
         source:
           type: string
           enum:
-            - aa-microservice.template-python
+            - aa-microservice.img.remove-bg
           description: Source service.
           examples:
-            - aa-microservice.template-python
+            - aa-microservice.img.remove-bg
         options:
           type: object
           description: Optional options to apply transformations depending of microservice.

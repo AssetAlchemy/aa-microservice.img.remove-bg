@@ -41,8 +41,8 @@ services:
             RABBITMQ_DEFAULT_USER: guest
             RABBITMQ_DEFAULT_PASS: guest
 
-    aa-microservice-template-python:
-        container_name: aa-microservice-template-python
+    aa-microservice-img-remove-bg:
+        container_name: aa-microservice-img-remove-bg
         env_file:
             - .env
         build:
