@@ -29,6 +29,8 @@ RUN apt-get update && apt-get install
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
+RUN mkdir -p ~/.u2net && wget -q https://github.com/danielgatis/rembg/releases/download/v0.0.0/silueta.onnx -O ~/.u2net/silueta.onnx
+
 COPY . .
 
 CMD ["python ", "./app/main.py"]
